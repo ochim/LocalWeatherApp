@@ -40,6 +40,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Use the 'by viewModels()' Kotlin property delegate
+        // from the activity-ktx artifact
         val model: MainViewModel by viewModels()
 
         val lvCityList = findViewById<ListView>(R.id.lvCityList)
