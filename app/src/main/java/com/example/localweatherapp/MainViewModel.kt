@@ -1,6 +1,5 @@
 package com.example.localweatherapp
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +8,7 @@ import com.example.localweatherapp.repository.CityWeatherInfoInterface
 import com.example.localweatherapp.repository.CityWeatherInfoRepository
 import com.example.localweatherapp.repository.WeatherInfoRepository
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class MainViewModel : ViewModel() {
     private val info: MutableLiveData<Info?> = MutableLiveData()
@@ -29,7 +29,7 @@ class MainViewModel : ViewModel() {
                 val i = cityWeatherInfoRepository.getWeatherInfo(query)
                 info.postValue(i)
             } catch (ex: Exception) {
-                Log.e("error", ex.toString())
+                Timber.e(ex.toString())
             }
         }
     }
