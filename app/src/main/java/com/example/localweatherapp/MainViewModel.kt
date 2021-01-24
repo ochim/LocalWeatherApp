@@ -5,11 +5,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.localweatherapp.repository.CityWeatherInfoInterface
+import com.example.localweatherapp.repository.CityWeatherInfoRepository
+import com.example.localweatherapp.repository.WeatherInfoRepository
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
     private val info: MutableLiveData<Info?> = MutableLiveData()
-    private val repository = MainRepository()
+
+    private val weatherInfoRepository = WeatherInfoRepository()
+    private val cityWeatherInfoRepository = CityWeatherInfoRepository(
+        weatherInfoRepository.retrofit.create(CityWeatherInfoInterface::class.java)
+    )
 
     fun getInfo(query: String): LiveData<Info?> {
         loadInfo(query)
@@ -17,17 +24,14 @@ class MainViewModel : ViewModel() {
     }
 
     private fun loadInfo(query: String) {
-        val url = "$WEATHERINFO_URL&q=$query&appid=$APP_ID"
         viewModelScope.launch {
             try {
-                val result = repository.backgroundTaskRunner(url)
-                val i = repository.postExecutorRunner(result)
+                val i = cityWeatherInfoRepository.getWeatherInfo(query)
                 info.postValue(i)
-            } catch (ex : Exception) {
+            } catch (ex: Exception) {
                 Log.e("error", ex.toString())
             }
         }
-
     }
 
 }

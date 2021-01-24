@@ -18,8 +18,6 @@ import androidx.appcompat.app.AppCompatActivity
  *
  * を元にして変更
  */
-const val WEATHERINFO_URL = "https://api.openweathermap.org/data/2.5/weather?lang=ja"
-const val APP_ID = BuildConfig.API_KEY
 
 class MainActivity : AppCompatActivity() {
 

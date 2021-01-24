@@ -1,6 +1,8 @@
-package com.example.localweatherapp
+package com.example.localweatherapp.repository
 
 import androidx.annotation.WorkerThread
+import com.example.localweatherapp.Info
+import com.example.localweatherapp.Weather
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -12,10 +14,6 @@ import java.net.URL
 
 class MainRepository {
 
-    /**
-     * 非同期でお天気情報APIにアクセスするためのメソッド
-     * suspendで処理を中断
-     */
     @WorkerThread
     suspend fun backgroundTaskRunner(_url: String): String {
         return withContext(Dispatchers.IO) {
@@ -33,10 +31,7 @@ class MainRepository {
         }
     }
 
-    /**
-     * 取得したお天気情報を解析する
-     */
-    fun postExecutorRunner(result: String): Info  {
+    fun postExecutorRunner(result: String): Info {
         val rootJSON = JSONObject(result)
         val cityName = rootJSON.getString("name")
         val weatherJSONArray = rootJSON.getJSONArray("weather")

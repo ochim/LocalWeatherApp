@@ -15,3 +15,6 @@
 ### その他
 - [Gradle のヒントとテクニック](https://developer.android.com/studio/build/gradle-tips?hl=ja)
 - [公開したくない情報をlocal.propertiesに定義しbuild.gradleに読み込む](https://qiita.com/kuwapp/items/dc6e42692e72037c9336)
+- [Okhttp](https://square.github.io/okhttp)
+- [Retrofit](https://square.github.io/retrofit/)
+- [Moshi](https://github.com/square/moshi)
