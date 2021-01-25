@@ -18,3 +18,5 @@
 - [Okhttp](https://square.github.io/okhttp)
 - [Retrofit](https://square.github.io/retrofit/)
 - [Moshi](https://github.com/square/moshi)
+- [Glide](https://github.com/bumptech/glide)
+- [View Binding](https://developer.android.com/topic/libraries/view-binding)

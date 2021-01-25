@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.example.localweatherapp.databinding.ActivityMainBinding
 
 /**
  * CodeZine
@@ -33,15 +34,18 @@ class MainActivity : AppCompatActivity() {
             mapOf("name" to "姫路", "q" to "Himeji"),
         )
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Use the 'by viewModels()' Kotlin property delegate
         // from the activity-ktx artifact
         val model: MainViewModel by viewModels()
 
-        val lvCityList = findViewById<ListView>(R.id.lvCityList)
+        val lvCityList = binding.lvCityList
         val from = arrayOf("name")
         val to = intArrayOf(android.R.id.text1)
         val adapter = SimpleAdapter(
@@ -53,8 +57,7 @@ class MainActivity : AppCompatActivity() {
              * リストがタップされた時の処理が記述されたメソッド
              */
             override fun onItemClick(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
-                val item = _list[position]
-                val q = item["q"]
+                val q = _list[position]["q"]
                 model.getInfo(q!!).observe(this@MainActivity, {
                     it?.let { updateUI(it) }
                 })
@@ -70,15 +73,12 @@ class MainActivity : AppCompatActivity() {
         val description = weather.description ?: ""
         val desc = "現在は" + description + "です。"
 
-        val tvWeatherTelop = findViewById<TextView>(R.id.tvWeatherTelop)
-        val tvWeatherDesc = findViewById<TextView>(R.id.tvWeatherDesc)
-        tvWeatherTelop.text = telop
-        tvWeatherDesc.text = desc
+        binding.tvWeatherTelop.text = telop
+        binding.tvWeatherDesc.text = desc
 
         weather.icon ?: return
-        val imageView = findViewById<ImageView>(R.id.imageView)
         Glide.with(this).load(iconUrl(weather.icon)).centerCrop()
-            .error(R.drawable.no_image).into(imageView)
+            .error(R.drawable.no_image).into(binding.imageView)
     }
 
     private fun iconUrl(name: String) = "https://openweathermap.org/img/wn/$name@2x.png"
