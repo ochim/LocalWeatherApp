@@ -2,13 +2,11 @@ package com.example.localweatherapp
 
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ListView
-import android.widget.SimpleAdapter
-import android.widget.TextView
+import android.widget.*
 import androidx.activity.viewModels
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 
 /**
  * CodeZine
@@ -68,13 +66,21 @@ class MainActivity : AppCompatActivity() {
     @UiThread
     fun updateUI(info: Info) {
         val telop = info.name + "の天気"
-        val description = info.weather[0].description ?: ""
+        val weather = info.weather[0]
+        val description = weather.description ?: ""
         val desc = "現在は" + description + "です。"
 
         val tvWeatherTelop = findViewById<TextView>(R.id.tvWeatherTelop)
         val tvWeatherDesc = findViewById<TextView>(R.id.tvWeatherDesc)
         tvWeatherTelop.text = telop
         tvWeatherDesc.text = desc
+
+        weather.icon ?: return
+        val imageView = findViewById<ImageView>(R.id.imageView)
+        Glide.with(this).load(iconUrl(weather.icon)).centerCrop()
+            .error(R.drawable.no_image).into(imageView)
     }
+
+    private fun iconUrl(name: String) = "https://openweathermap.org/img/wn/$name@2x.png"
 
 }
