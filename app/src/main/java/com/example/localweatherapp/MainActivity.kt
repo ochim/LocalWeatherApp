@@ -64,6 +64,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        model.getErrorMessage().observe(this, {
+            it?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     @UiThread

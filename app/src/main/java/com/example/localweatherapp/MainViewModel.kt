@@ -12,6 +12,7 @@ import timber.log.Timber
 
 class MainViewModel : ViewModel() {
     private val info: MutableLiveData<Info?> = MutableLiveData()
+    private val errorMessage: MutableLiveData<String?> = MutableLiveData()
 
     private val weatherInfoRepository = WeatherInfoRepository()
     private val cityWeatherInfoRepository = CityWeatherInfoRepository(
@@ -23,13 +24,16 @@ class MainViewModel : ViewModel() {
         return info
     }
 
+    fun getErrorMessage(): LiveData<String?> = errorMessage
+
     private fun loadInfo(query: String) {
         viewModelScope.launch {
             try {
-                val i = cityWeatherInfoRepository.getWeatherInfo(query)
+                val i = cityWeatherInfoRepository.getWeatherInfo(query, errorMessage)
                 info.postValue(i)
             } catch (ex: Exception) {
                 Timber.e(ex.toString())
+                errorMessage.postValue(ex.message ?: "不明なエラーが発生しました")
             }
         }
     }

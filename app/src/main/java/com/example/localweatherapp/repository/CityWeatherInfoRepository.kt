@@ -1,5 +1,6 @@
 package com.example.localweatherapp.repository
 
+import androidx.lifecycle.MutableLiveData
 import com.example.localweatherapp.BuildConfig
 import com.example.localweatherapp.Info
 import kotlinx.coroutines.Dispatchers
@@ -15,14 +16,17 @@ interface CityWeatherInfoInterface {
     fun getWeatherInfo(@Query("q") query: String): Call<Info>
 }
 
-class CityWeatherInfoRepository(val cityWeatherInfoInterface: CityWeatherInfoInterface) {
+class CityWeatherInfoRepository(
+    private val cityWeatherInfoInterface: CityWeatherInfoInterface,
+) {
 
-    suspend fun getWeatherInfo(query: String): Info? {
+    suspend fun getWeatherInfo(query: String, errorMessage: MutableLiveData<String?>): Info? {
         return withContext(Dispatchers.IO) {
             val response = cityWeatherInfoInterface.getWeatherInfo(query).execute()
             if (response.isSuccessful) {
-                response.body()!!
+                response.body()
             } else {
+                errorMessage.postValue("${response.code()} ${response.message()}")
                 null
             }
         }
