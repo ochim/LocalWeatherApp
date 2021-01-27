@@ -8,6 +8,7 @@ import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.localweatherapp.databinding.ActivityMainBinding
+import com.example.localweatherapp.model.Info
 
 /**
  * CodeZine

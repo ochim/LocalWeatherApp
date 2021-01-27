@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.localweatherapp.model.Info
 import com.example.localweatherapp.repository.CityWeatherInfoInterface
 import com.example.localweatherapp.repository.CityWeatherInfoRepository
 import com.example.localweatherapp.repository.WeatherInfoRepository

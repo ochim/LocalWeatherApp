@@ -2,7 +2,11 @@ package com.example.localweatherapp.repository
 
 import androidx.lifecycle.MutableLiveData
 import com.example.localweatherapp.BuildConfig
-import com.example.localweatherapp.Info
+import com.example.localweatherapp.database.Database
+import com.example.localweatherapp.model.CityWeather
+import com.example.localweatherapp.model.Info
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Call
@@ -24,11 +28,34 @@ class CityWeatherInfoRepository(
         return withContext(Dispatchers.IO) {
             val response = cityWeatherInfoInterface.getWeatherInfo(query).execute()
             if (response.isSuccessful) {
-                response.body()
+                val info = response.body()!!
+                updateCityWeather(info, query)
+                info
             } else {
                 errorMessage.postValue("${response.code()} ${response.message()}")
                 null
             }
+        }
+    }
+
+    /*
+     * アプリDBに保存した天気情報を更新する
+     */
+    private suspend fun updateCityWeather(info: Info, query: String) {
+        val dao = Database.getAppDatabase().cityWeatherDao()
+        val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+        val json = moshi.adapter(Info::class.java).toJson(info)
+
+        val cityWeather = dao.loadByQuery(query)
+        if (cityWeather != null){
+
+            cityWeather.dt = info.dt
+            cityWeather.infoJson = json
+            dao.update(cityWeather)
+        } else {
+
+            val city = CityWeather(0, query, info.dt, json)
+            dao.insertAll(city)
         }
     }
 
