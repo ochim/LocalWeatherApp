@@ -60,5 +60,13 @@ Java版のスケルトンプロジェクト
             app:srcCompat="@drawable/no_image"
             android:contentDescription="@null"
             />
+
+        <TextView
+            android:id="@+id/tvWeatherTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textSize="12sp"/>
+
     </LinearLayout>
 </LinearLayout>
