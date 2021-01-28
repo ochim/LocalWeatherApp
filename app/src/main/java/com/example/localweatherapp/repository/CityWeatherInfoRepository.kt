@@ -12,6 +12,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.util.*
 
 const val APP_ID = BuildConfig.API_KEY
 
@@ -24,34 +25,56 @@ class CityWeatherInfoRepository(
     private val cityWeatherInfoInterface: CityWeatherInfoInterface,
 ) {
 
+    private val dao = Database.getAppDatabase().cityWeatherDao()
+    private val adapter = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build().adapter(Info::class.java)
+
     suspend fun getWeatherInfo(query: String, errorMessage: MutableLiveData<String?>): Info? {
         return withContext(Dispatchers.IO) {
+            val savedCityWeather = dao.loadByQuery(query)
+            if (withIn1hour(savedCityWeather?.dt)) {
+                //1時間前以内のデータがDBにあればそれを返す
+                savedCityWeather?.infoJson?.let {
+                    return@withContext adapter.fromJson(it)
+                }
+            }
+
+            //WEB APIから取得する
             val response = cityWeatherInfoInterface.getWeatherInfo(query).execute()
             if (response.isSuccessful) {
                 val info = response.body()!!
-                updateCityWeather(info, query)
+                updateCityWeather(info, query, savedCityWeather)
                 info
             } else {
                 errorMessage.postValue("${response.code()} ${response.message()}")
-                null
+                //エラーなのでDBのものを返す
+                savedCityWeather?.infoJson?.let {
+                    return@withContext adapter.fromJson(it)
+                }
             }
         }
+    }
+
+    private fun withIn1hour(unixTime: Int?): Boolean {
+        unixTime ?: return false
+        val from = Date(System.currentTimeMillis())
+        val to = Date(unixTime * 1000L)
+        return (from.time - to.time) <= 1000 * 60 * 60
     }
 
     /*
      * アプリDBに保存した天気情報を更新する
      */
-    private suspend fun updateCityWeather(info: Info, query: String) {
-        val dao = Database.getAppDatabase().cityWeatherDao()
-        val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-        val json = moshi.adapter(Info::class.java).toJson(info)
+    private suspend fun updateCityWeather(info: Info, query: String, savedCityWeather: CityWeather?) {
+        val json = adapter.toJson(info)
 
-        val cityWeather = dao.loadByQuery(query)
-        if (cityWeather != null){
+        if (savedCityWeather != null){
 
-            cityWeather.dt = info.dt
-            cityWeather.infoJson = json
-            dao.update(cityWeather)
+            savedCityWeather.apply {
+                dt = info.dt
+                infoJson = json
+                dao.update(this)
+            }
+
         } else {
 
             val city = CityWeather(0, query, info.dt, json)
