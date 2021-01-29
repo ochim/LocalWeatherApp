@@ -3,6 +3,7 @@ package com.example.localweatherapp.repository
 import androidx.lifecycle.MutableLiveData
 import com.example.localweatherapp.BuildConfig
 import com.example.localweatherapp.database.Database
+import com.example.localweatherapp.extension.within1hourAgo
 import com.example.localweatherapp.model.CityWeather
 import com.example.localweatherapp.model.Info
 import com.squareup.moshi.Moshi
@@ -31,7 +32,7 @@ class CityWeatherInfoRepository(
     suspend fun getWeatherInfo(query: String, errorMessage: MutableLiveData<String?>): Info? {
         return withContext(Dispatchers.IO) {
             val savedCityWeather = dao.loadByQuery(query)
-            if (withIn1hour(savedCityWeather?.dt)) {
+            if (Date().within1hourAgo(savedCityWeather?.dt)) {
                 //1時間前以内のデータがDBにあればそれを返す
                 savedCityWeather?.infoJson?.let {
                     return@withContext adapter.fromJson(it)
@@ -52,13 +53,6 @@ class CityWeatherInfoRepository(
                 }
             }
         }
-    }
-
-    private fun withIn1hour(unixTime: Int?): Boolean {
-        unixTime ?: return false
-        val from = Date(System.currentTimeMillis())
-        val to = Date(unixTime * 1000L)
-        return (from.time - to.time) <= 1000 * 60 * 60
     }
 
     /*
