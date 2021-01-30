@@ -72,6 +72,11 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
             }
         })
+
+        model.progressBarStatus.observe(this, {
+            binding.progressBar.visibility = it
+        })
+
     }
 
     @UiThread

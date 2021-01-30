@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 class MainViewModel : ViewModel() {
     private val info: MutableLiveData<Info?> = MutableLiveData()
     private val errorMessage: MutableLiveData<String?> = MutableLiveData()
+    val progressBarStatus: MutableLiveData<Int> = MutableLiveData(android.widget.ProgressBar.INVISIBLE)
 
     private val weatherInfoRepository = WeatherInfoRepository()
     private val cityWeatherInfoRepository = CityWeatherInfoRepository(
@@ -27,9 +28,12 @@ class MainViewModel : ViewModel() {
     fun getErrorMessage(): LiveData<String?> = errorMessage
 
     private fun loadInfo(query: String) {
+        progressBarStatus.postValue(android.widget.ProgressBar.VISIBLE)
+
         viewModelScope.launch {
             val i = cityWeatherInfoRepository.getWeatherInfo(query, errorMessage)
             info.postValue(i)
+            progressBarStatus.postValue(android.widget.ProgressBar.INVISIBLE)
         }
     }
 
