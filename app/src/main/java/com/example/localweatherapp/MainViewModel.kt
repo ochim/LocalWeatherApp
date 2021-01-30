@@ -9,7 +9,6 @@ import com.example.localweatherapp.repository.CityWeatherInfoInterface
 import com.example.localweatherapp.repository.CityWeatherInfoRepository
 import com.example.localweatherapp.repository.WeatherInfoRepository
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class MainViewModel : ViewModel() {
     private val info: MutableLiveData<Info?> = MutableLiveData()
@@ -29,13 +28,8 @@ class MainViewModel : ViewModel() {
 
     private fun loadInfo(query: String) {
         viewModelScope.launch {
-            try {
-                val i = cityWeatherInfoRepository.getWeatherInfo(query, errorMessage)
-                info.postValue(i)
-            } catch (ex: Exception) {
-                Timber.e(ex.toString())
-                errorMessage.postValue(ex.message ?: "不明なエラーが発生しました")
-            }
+            val i = cityWeatherInfoRepository.getWeatherInfo(query, errorMessage)
+            info.postValue(i)
         }
     }
 

@@ -13,6 +13,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
+import timber.log.Timber
 import java.util.*
 
 const val APP_ID = BuildConfig.API_KEY
@@ -39,15 +40,25 @@ class CityWeatherInfoRepository(
                 }
             }
 
-            //WEB APIから取得する
-            val response = cityWeatherInfoInterface.getWeatherInfo(query).execute()
-            if (response.isSuccessful) {
-                val info = response.body()!!
-                updateCityWeather(info, query, savedCityWeather)
-                info
-            } else {
-                errorMessage.postValue("${response.code()} ${response.message()}")
-                //エラーなのでDBのものを返す
+            try {
+                //WEB APIから取得する
+                val response = cityWeatherInfoInterface.getWeatherInfo(query).execute()
+                if (response.isSuccessful) {
+                    val info = response.body()!!
+                    updateCityWeather(info, query, savedCityWeather)
+                    info
+                } else {
+                    errorMessage.postValue("${response.code()} ${response.message()}")
+                    //エラーなのでDBのものを返す
+                    savedCityWeather?.infoJson?.let {
+                        return@withContext adapter.fromJson(it)
+                    }
+                }
+
+            } catch (ex: Exception) {
+                Timber.e(ex.toString())
+                errorMessage.postValue(ex.message ?: "不明なエラーが発生しました")
+                //例外が起きたのでDBのものを返す
                 savedCityWeather?.infoJson?.let {
                     return@withContext adapter.fromJson(it)
                 }
