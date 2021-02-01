@@ -2,10 +2,11 @@ package com.example.localweatherapp
 
 import android.app.Application
 import com.example.localweatherapp.database.Database
+import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 import timber.log.Timber.Tree
 
-
+@HiltAndroidApp
 class MainApplication: Application() {
 
     init {

@@ -8,9 +8,12 @@ import com.example.localweatherapp.model.Info
 import com.example.localweatherapp.repository.CityWeatherInfoInterface
 import com.example.localweatherapp.repository.CityWeatherInfoRepository
 import com.example.localweatherapp.repository.WeatherInfoRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel : ViewModel() {
+@HiltViewModel
+class MainViewModel @Inject constructor() : ViewModel() {
     private val info: MutableLiveData<Info?> = MutableLiveData()
     private val errorMessage: MutableLiveData<String?> = MutableLiveData()
     val progressBarStatus: MutableLiveData<Int> = MutableLiveData(android.widget.ProgressBar.INVISIBLE)

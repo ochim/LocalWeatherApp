@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.localweatherapp.databinding.ActivityMainBinding
 import com.example.localweatherapp.model.Info
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -20,7 +21,7 @@ import java.util.*
  *
  * を元にして変更
  */
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     /**
