@@ -1,11 +1,17 @@
 package com.example.localweatherapp
 
 import android.app.Application
+import com.example.localweatherapp.database.Database
+import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 import timber.log.Timber.Tree
 
-
+@HiltAndroidApp
 class MainApplication: Application() {
+
+    init {
+        instance = this
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -14,7 +20,16 @@ class MainApplication: Application() {
         } else {
             Timber.plant(CrashReportingTree())
         }
+
+        Database.initialize(applicationContext)
     }
+
+    companion object {
+        private var instance: MainApplication? = null
+
+        fun getInstance(): MainApplication = instance!!
+    }
+
 
     /** A tree which logs important information for crash reporting.  */
     inner class CrashReportingTree : Tree() {

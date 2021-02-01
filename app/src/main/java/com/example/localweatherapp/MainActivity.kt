@@ -8,6 +8,10 @@ import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.localweatherapp.databinding.ActivityMainBinding
+import com.example.localweatherapp.model.Info
+import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * CodeZine
@@ -17,7 +21,7 @@ import com.example.localweatherapp.databinding.ActivityMainBinding
  *
  * を元にして変更
  */
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     /**
@@ -69,6 +73,11 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
             }
         })
+
+        model.progressBarStatus.observe(this, {
+            binding.progressBar.visibility = it
+        })
+
     }
 
     @UiThread
@@ -81,9 +90,15 @@ class MainActivity : AppCompatActivity() {
         binding.tvWeatherTelop.text = telop
         binding.tvWeatherDesc.text = desc
 
-        weather.icon ?: return
-        Glide.with(this).load(iconUrl(weather.icon)).centerCrop()
-            .error(R.drawable.no_image).into(binding.imageView)
+        weather.icon?.let {
+            Glide.with(this).load(iconUrl(it)).centerCrop()
+                .error(R.drawable.no_image).into(binding.imageView)
+        }
+
+        info.dt?.let {
+            val sdf = SimpleDateFormat("yyyy-MM-dd kk:mm:ss", Locale.US)
+            binding.tvWeatherTime.text = getString(R.string.tv_wtime_text, sdf.format(Date(it * 1000L)))
+        }
     }
 
     private fun iconUrl(name: String) = "https://openweathermap.org/img/wn/$name@2x.png"

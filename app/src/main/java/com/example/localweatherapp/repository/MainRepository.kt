@@ -1,8 +1,8 @@
 package com.example.localweatherapp.repository
 
 import androidx.annotation.WorkerThread
-import com.example.localweatherapp.Info
-import com.example.localweatherapp.Weather
+import com.example.localweatherapp.model.Info
+import com.example.localweatherapp.model.Weather
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -38,7 +38,7 @@ class MainRepository {
         val weatherJSON = weatherJSONArray.getJSONObject(0)
         val description = weatherJSON.getString("description")
         val weather = Weather(null, null, description, null)
-        return Info(cityName, listOf(weather))
+        return Info(cityName, listOf(weather), rootJSON.getInt("dt"))
     }
 
     /**

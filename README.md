@@ -20,3 +20,5 @@
 - [Moshi](https://github.com/square/moshi)
 - [Glide](https://github.com/bumptech/glide)
 - [View Binding](https://developer.android.com/topic/libraries/view-binding)
+- Room.[1](https://developer.android.com/training/data-storage/room?hl=ja) [2](https://developer.android.com/training/data-storage/room/async-queries?hl=ja)
+- [Dagger Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
