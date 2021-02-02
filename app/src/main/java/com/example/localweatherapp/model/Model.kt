@@ -18,6 +18,11 @@ data class Weather(
     val icon: String?
 )
 
+data class City(
+    val name: String,
+    val q: String?
+)
+
 @Entity(tableName = "cityweather")
 data class CityWeather(
     @PrimaryKey(autoGenerate = true) val id: Int,
