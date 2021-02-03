@@ -2,7 +2,6 @@ package com.example.localweatherapp
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -14,6 +13,7 @@ import com.example.localweatherapp.model.Info
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 /**
  * CodeZine
@@ -40,15 +40,12 @@ class MainActivity : AppCompatActivity() {
     )
 
     private lateinit var binding: ActivityMainBinding
+    @Inject lateinit var model: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        // Use the 'by viewModels()' Kotlin property delegate
-        // from the activity-ktx artifact
-        val model: MainViewModel by viewModels()
 
         val rvCityList = binding.recyclerView
         val itemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
