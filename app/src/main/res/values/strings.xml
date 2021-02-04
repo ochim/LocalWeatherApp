@@ -2,4 +2,5 @@
     <string name="app_name">LocalWeatherApp</string>
     <string name="tv_winfo_title">お天気詳細</string>
     <string name="tv_wtime_text">data: %s</string>
+    <string name="help">ヘルプ</string>
 </resources>
