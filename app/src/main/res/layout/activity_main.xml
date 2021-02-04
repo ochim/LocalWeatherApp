@@ -13,17 +13,19 @@ Java版のスケルトンプロジェクト
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/lvCityList"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5" />
+        android:layout_weight="0.55"
+        android:scrollbars="vertical"
+        app:layoutManager="LinearLayoutManager" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
-        android:layout_weight="0.5"
+        android:layout_weight="0.45"
         android:orientation="vertical">
 
         <TextView
@@ -32,7 +34,7 @@ Java版のスケルトンプロジェクト
             android:layout_marginBottom="10dp"
             android:gravity="center"
             android:text="@string/tv_winfo_title"
-            android:textSize="25sp" />
+            android:textAppearance="?attr/textAppearanceHeadline5" />
 
         <TextView
             android:id="@+id/tvWeatherTelop"
@@ -40,14 +42,14 @@ Java版のスケルトンプロジェクト
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginBottom="8dp"
-            android:textSize="20sp" />
+            android:textAppearance="?attr/textAppearanceHeadline6" />
 
         <TextView
             android:id="@+id/tvWeatherDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:textSize="15sp" />
+            android:textAppearance="?attr/textAppearanceHeadline6" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -69,7 +71,7 @@ Java版のスケルトンプロジェクト
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:visibility="invisible"/>
+                android:visibility="invisible" />
 
         </LinearLayout>
 
@@ -78,7 +80,7 @@ Java版のスケルトンプロジェクト
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:textSize="12sp" />
+            android:textAppearance="?attr/textAppearanceSubtitle1" />
 
     </LinearLayout>
 </LinearLayout>
