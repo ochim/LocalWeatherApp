@@ -22,3 +22,4 @@
 - [View Binding](https://developer.android.com/topic/libraries/view-binding)
 - Room.[1](https://developer.android.com/training/data-storage/room?hl=ja) [2](https://developer.android.com/training/data-storage/room/async-queries?hl=ja)
 - [Dagger Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
+- [Including Open Source Notices](https://developers.google.com/android/guides/opensource)
