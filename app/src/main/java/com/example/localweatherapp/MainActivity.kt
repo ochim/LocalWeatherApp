@@ -34,17 +34,27 @@ class MainActivity : AppCompatActivity() {
      * 地点として表示させるリストデータ。
      */
     private var _list: List<City> = listOf(
-            City("大阪", "Osaka"),
-            City("神戸", "Kobe"),
-            City("京都", "Kyoto"),
-            City("大津", "Otsu"),
-            City("奈良", "Nara"),
-            City("和歌山", "Wakayama"),
-            City("姫路", "Himeji"),
-    )
+        City("札幌", "Sapporo"),
+        City("仙台", "Sendai"),
+        City("東京", "Tokyo"),
+        City("横浜", "Yokohama"),
+        City("名古屋", "Nagoya"),
+        City("大阪", "Osaka"),
+        City("神戸", "Kobe"),
+        City("京都", "Kyoto"),
+        City("大津", "Otsu"),
+        City("奈良", "Nara"),
+        City("和歌山", "Wakayama"),
+        City("姫路", "Himeji"),
+        City("広島", "Hiroshima"),
+        City("福岡", "Fukuoka"),
+        City("鹿児島", "Kagoshima"),
+        City("那覇", "Naha"),
+        )
 
     private lateinit var binding: ActivityMainBinding
-    @Inject lateinit var model: MainViewModel
+    @Inject
+    lateinit var model: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,7 +121,8 @@ class MainActivity : AppCompatActivity() {
 
         info.dt?.let {
             val sdf = SimpleDateFormat("yyyy-MM-dd kk:mm:ss", Locale.US)
-            binding.tvWeatherTime.text = getString(R.string.tv_wtime_text, sdf.format(Date(it * 1000L)))
+            binding.tvWeatherTime.text =
+                getString(R.string.tv_wtime_text, sdf.format(Date(it * 1000L)))
         }
     }
 
