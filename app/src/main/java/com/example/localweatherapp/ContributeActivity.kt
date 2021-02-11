@@ -1,11 +1,13 @@
 package com.example.localweatherapp
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.localweatherapp.databinding.ActivityContributeBinding
 
@@ -21,24 +23,29 @@ class ContributeActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.buttonPhoto.setOnClickListener {
+            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             try {
-                Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-                }
-            } catch (ex: Exception) {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+            } catch (e: ActivityNotFoundException) {
+                Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
             }
         }
 
         binding.buttonVideo.setOnClickListener {
-            try {
-                Intent(MediaStore.ACTION_VIDEO_CAPTURE).also { takeVideoIntent ->
+            Intent(MediaStore.ACTION_VIDEO_CAPTURE).also { takeVideoIntent ->
+                takeVideoIntent.resolveActivity(packageManager)?.also {
                     startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE)
                 }
-            } catch (ex: Exception) {
             }
         }
 
-        binding.buttonContribute.setOnClickListener{
+        binding.buttonContribute.setOnClickListener {
+            if (binding.imageView.visibility == View.VISIBLE ||
+                binding.videoView.visibility == View.VISIBLE
+            ) {
+                //ダミーメッセージ
+                Toast.makeText(this, "投稿しました", Toast.LENGTH_LONG).show()
+            }
         }
 
     }
