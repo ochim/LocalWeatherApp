@@ -55,22 +55,26 @@ class ContributeActivity : AppCompatActivity() {
         binding.imageView.visibility = View.INVISIBLE
         binding.videoView.visibility = View.INVISIBLE
 
-
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             val imageBitmap = intent?.extras?.get("data") as? Bitmap
             imageBitmap ?: return
-            binding.imageView.visibility = View.VISIBLE
-            binding.imageView.setImageBitmap(imageBitmap)
+            binding.imageView.apply {
+                visibility = View.VISIBLE
+                setImageBitmap(imageBitmap)
+            }
             return
         }
+
         if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
             val videoUri: Uri? = intent?.data
             videoUri ?: return
-            binding.videoView.visibility = View.VISIBLE
-            binding.videoView.setVideoURI(videoUri)
-            binding.videoView.start()
+            binding.videoView.apply {
+                visibility = View.VISIBLE
+                setVideoURI(videoUri)
+                start()
+            }
             return
         }
     }
-
 }
+
