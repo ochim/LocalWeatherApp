@@ -15,6 +15,7 @@ import com.example.localweatherapp.databinding.ActivityMainBinding
 import com.example.localweatherapp.model.City
 import com.example.localweatherapp.model.Info
 import dagger.hilt.android.AndroidEntryPoint
+import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -90,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @UiThread
-    private fun updateUI(info: Info) {
+    private fun updateUI(info:Info) {
         val telop = info.name + "の天気"
         val weather = info.weather[0]
         val description = weather.description ?: ""
@@ -108,6 +109,15 @@ class MainActivity : AppCompatActivity() {
             val sdf = SimpleDateFormat("yyyy-MM-dd kk:mm:ss", Locale.US)
             binding.tvWeatherTime.text =
                 getString(R.string.tv_wtime_text, sdf.format(Date(it * 1000L)))
+        }
+
+        info.main?.temp?.let {
+            val bd = BigDecimal(it).subtract(BigDecimal(273.15))
+            binding.tvWeatherTemperature.text = "気温 ${bd.toInt()}°C"
+        }
+
+        info.main?.humidity?.let {
+            binding.tvWeatherHumidity.text = "湿度 ${it.toInt()}％"
         }
     }
 
