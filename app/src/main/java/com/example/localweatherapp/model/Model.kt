@@ -8,7 +8,8 @@ import com.squareup.moshi.JsonClass
 data class Info(
     val name: String,
     val weather: List<Weather>,
-    val dt: Int?
+    val dt: Int?,
+    val main: Temperature?
 )
 
 data class Weather(
@@ -21,6 +22,11 @@ data class Weather(
 data class City(
     val name: String,
     val q: String?
+)
+
+data class Temperature(
+    val temp: Double?,
+    val humidity: Double?
 )
 
 @Entity(tableName = "cityweather")

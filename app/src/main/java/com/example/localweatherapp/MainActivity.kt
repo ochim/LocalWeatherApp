@@ -15,6 +15,7 @@ import com.example.localweatherapp.databinding.ActivityMainBinding
 import com.example.localweatherapp.model.City
 import com.example.localweatherapp.model.Info
 import dagger.hilt.android.AndroidEntryPoint
+import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var cityList: List<City>
+
     @Inject
     lateinit var model: MainViewModel
 
@@ -108,6 +110,16 @@ class MainActivity : AppCompatActivity() {
             val sdf = SimpleDateFormat("yyyy-MM-dd kk:mm:ss", Locale.US)
             binding.tvWeatherTime.text =
                 getString(R.string.tv_wtime_text, sdf.format(Date(it * 1000L)))
+        }
+
+        info.main?.temp?.let {
+            // ケルビン値を摂氏に変換する
+            val bd = BigDecimal(it).subtract(BigDecimal(273.15))
+            binding.tvWeatherTemperature.text = getString(R.string.tv_wtemperature_text, bd.toInt())
+        }
+
+        info.main?.humidity?.let {
+            binding.tvWeatherHumidity.text = getString(R.string.tv_whumidity_text, it.toInt())
         }
     }
 
