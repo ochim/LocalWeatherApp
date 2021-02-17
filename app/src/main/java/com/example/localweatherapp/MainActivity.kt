@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var cityList: List<City>
+
     @Inject
     lateinit var model: MainViewModel
 
@@ -91,7 +92,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @UiThread
-    private fun updateUI(info:Info) {
+    private fun updateUI(info: Info) {
         val telop = info.name + "の天気"
         val weather = info.weather[0]
         val description = weather.description ?: ""
@@ -112,12 +113,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         info.main?.temp?.let {
+            // ケルビン値を摂氏に変換する
             val bd = BigDecimal(it).subtract(BigDecimal(273.15))
-            binding.tvWeatherTemperature.text = "気温 ${bd.toInt()}°C"
+            binding.tvWeatherTemperature.text = getString(R.string.tv_wtemperature_text, bd.toInt())
         }
 
         info.main?.humidity?.let {
-            binding.tvWeatherHumidity.text = "湿度 ${it.toInt()}％"
+            binding.tvWeatherHumidity.text = getString(R.string.tv_whumidity_text, it.toInt())
         }
     }
 
