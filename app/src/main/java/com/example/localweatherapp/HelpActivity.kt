@@ -1,6 +1,5 @@
 package com.example.localweatherapp
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -20,16 +19,20 @@ import com.google.android.material.composethemeadapter.MdcTheme
 class HelpActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val onClick: () -> Unit = {
+            startActivity(Intent(this, OssLicensesMenuActivity::class.java))
+        }
+
         setContent {
             MdcTheme() {
-                License(this)
+                License(onClick)
             }
         }
     }
 }
 
 @Composable
-private fun License(context: Context) {
+private fun License(onClick: () -> Unit) {
     Text(
         text = stringResource(id = R.string.oss_license_title),
         style = MaterialTheme.typography.body1,
@@ -38,8 +41,6 @@ private fun License(context: Context) {
             .padding(start = 10.dp, top = 10.dp)
             .clickable(
                 enabled = true
-            ){
-                context.startActivity(Intent(context, OssLicensesMenuActivity::class.java))
-            },
+            ) { onClick() },
     )
 }
