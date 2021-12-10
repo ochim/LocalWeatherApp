@@ -1,5 +1,6 @@
 package com.example.localweatherapp
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Bitmap
@@ -8,11 +9,10 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.localweatherapp.databinding.ActivityContributeBinding
-
-private const val REQUEST_IMAGE_CAPTURE = 1
-private const val REQUEST_VIDEO_CAPTURE = 2
 
 class ContributeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityContributeBinding
@@ -22,10 +22,47 @@ class ContributeActivity : AppCompatActivity() {
         binding = ActivityContributeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val takePictureForResult = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult? ->
+            binding.imageView.visibility = View.INVISIBLE
+            binding.videoView.visibility = View.INVISIBLE
+
+            if (result?.resultCode == Activity.RESULT_OK) {
+                result.data?.let { intent ->
+                    val imageBitmap = intent.extras?.get("data") as? Bitmap
+                    imageBitmap?.let {
+                        binding.imageView.apply {
+                            visibility = View.VISIBLE
+                            setImageBitmap(it)
+                        }
+                    }
+                }
+            }
+        }
+
+        val takeVideoForResult = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult? ->
+            binding.imageView.visibility = View.INVISIBLE
+            binding.videoView.visibility = View.INVISIBLE
+
+            if (result?.resultCode == Activity.RESULT_OK) {
+                val videoUri: Uri? = result.data?.data
+                videoUri?.let {
+                    binding.videoView.apply {
+                        visibility = View.VISIBLE
+                        setVideoURI(videoUri)
+                        start()
+                    }
+                }
+            }
+        }
+
         binding.buttonPhoto.setOnClickListener {
             val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             try {
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+                takePictureForResult.launch(takePictureIntent)
             } catch (e: ActivityNotFoundException) {
                 Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
             }
@@ -34,7 +71,7 @@ class ContributeActivity : AppCompatActivity() {
         binding.buttonVideo.setOnClickListener {
             Intent(MediaStore.ACTION_VIDEO_CAPTURE).also { takeVideoIntent ->
                 takeVideoIntent.resolveActivity(packageManager)?.also {
-                    startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE)
+                    takeVideoForResult.launch(takeVideoIntent)
                 }
             }
         }
@@ -49,32 +86,4 @@ class ContributeActivity : AppCompatActivity() {
         }
 
     }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
-        super.onActivityResult(requestCode, resultCode, intent)
-        binding.imageView.visibility = View.INVISIBLE
-        binding.videoView.visibility = View.INVISIBLE
-
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            val imageBitmap = intent?.extras?.get("data") as? Bitmap
-            imageBitmap ?: return
-            binding.imageView.apply {
-                visibility = View.VISIBLE
-                setImageBitmap(imageBitmap)
-            }
-            return
-        }
-
-        if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
-            val videoUri: Uri? = intent?.data
-            videoUri ?: return
-            binding.videoView.apply {
-                visibility = View.VISIBLE
-                setVideoURI(videoUri)
-                start()
-            }
-            return
-        }
-    }
 }
-
