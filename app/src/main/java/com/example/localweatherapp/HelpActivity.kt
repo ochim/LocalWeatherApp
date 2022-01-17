@@ -31,9 +31,8 @@ class HelpActivity : AppCompatActivity() {
         }
 
         val onClickForWeatherApi: () -> Unit = {
-            val builder = CustomTabsIntent.Builder()
-            val customTabsIntent = builder.build()
-            customTabsIntent.launchUrl(this, Uri.parse("https://openweathermap.org/api"))
+            CustomTabsIntent.Builder().build().launchUrl(this,
+                Uri.parse(this.getString(R.string.weather_api_url)))
         }
 
         setContent {
@@ -64,7 +63,7 @@ private fun HelpContent(onClick0: () -> Unit = {}, onClick1: () -> Unit = {}) {
                 .padding(start = 10.dp)
         )
         Text(
-            text = "Weather API - OpenWeatherMap",
+            text = stringResource(id = R.string.weather_api_title),
             style = MaterialTheme.typography.body1,
             modifier = Modifier
                 .fillMaxWidth()

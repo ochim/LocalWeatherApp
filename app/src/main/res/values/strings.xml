@@ -8,4 +8,6 @@
     <string name="contribute">投稿</string>
     <string name="photo">Photo</string>
     <string name="video">Video</string>
+    <string name="weather_api_title">Weather API - OpenWeatherMap</string>
+    <string name="weather_api_url">https://openweathermap.org/api</string>
 </resources>
