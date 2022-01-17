@@ -118,4 +118,7 @@ dependencies {
 
     // When using a MDC theme
     implementation "com.google.android.material:compose-theme-adapter:1.1.1"
+
+    // Custom Tab
+    implementation "androidx.browser:browser:1.4.0"
 }
